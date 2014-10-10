@@ -1,12 +1,11 @@
-package es.hol.fpriego.sprites;
+package es.hol.fpriego.shootingmissiles;
 
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 
-import javax.swing.ImageIcon;
+import java.util.ArrayList;
 
-// This class represents a spacecraft. In this class we keep the image of the sprite and the coordinates of the sprite. 
-// The keyPressed() and keyReleased() methods control whether the sprite is moving or is in standstill
+import javax.swing.ImageIcon;
 
 public class Craft {
 
@@ -18,16 +17,19 @@ public class Craft {
     private int y;
     private Image image;
 
+    private ArrayList<Missile> missiles;
+
+    private final int CRAFT_SIZE = 20;
+
     public Craft() {
         ImageIcon ii = new ImageIcon(craft);
         image = ii.getImage();
+        missiles = new ArrayList<Missile>();
         x = 40;
         y = 60;
     }
 
-    //  The move() method changes the coordinates of the sprite. 
-    // These x, y values are used in the paint() method to draw the image of the sprite
-    
+
     public void move() {
         x += dx;
         y += dy;
@@ -44,10 +46,22 @@ public class Craft {
     public Image getImage() {
         return image;
     }
+    
+    // The getMissiles() method returns the ArrayList of missiles. It is called from the Board class
+    
+    public ArrayList<Missile> getMissiles() {
+        return missiles;
+    }
 
     public void keyPressed(KeyEvent e) {
 
         int key = e.getKeyCode();
+        
+        // If we press the space key, we fire
+        
+        if (key == KeyEvent.VK_SPACE) {
+            fire();
+        }
 
         if (key == KeyEvent.VK_LEFT) {
             dx = -1;
@@ -65,12 +79,16 @@ public class Craft {
             dy = 1;
         }
     }
+    
+    // The fire() method creates a new Missile object and adds it to the missiles ArrayList
+    
+    public void fire() {
+        missiles.add(new Missile(x + CRAFT_SIZE, y + CRAFT_SIZE/2));
+    }
 
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
-        
-        // When we release the left cursor key, we set the dx variable to zero. The spacecraft will stop moving
-        
+
         if (key == KeyEvent.VK_LEFT) {
             dx = 0;
         }
